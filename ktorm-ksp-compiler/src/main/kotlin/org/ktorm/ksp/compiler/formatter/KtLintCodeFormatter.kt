@@ -17,26 +17,32 @@
 package org.ktorm.ksp.compiler.formatter
 
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
-import com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
 import com.pinterest.ktlint.rule.engine.api.Code
-import com.pinterest.ktlint.rule.engine.api.EditorConfigDefaults
 import com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
-import org.ec4j.core.EditorConfigLoader
-import org.ec4j.core.Resource.Resources
-import java.util.*
+import com.pinterest.ktlint.rule.engine.core.api.AutocorrectDecision
+import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 
 internal class KtLintCodeFormatter(val environment: SymbolProcessorEnvironment) : CodeFormatter {
-    private val ktLintRuleEngine = KtLintRuleEngine(
-        ruleProviders = ServiceLoader
-            .load(RuleSetProviderV3::class.java, javaClass.classLoader)
-            .flatMap { it.getRuleProviders() }
-            .toSet(),
-        editorConfigDefaults = EditorConfigDefaults(
-            EditorConfigLoader.default_().load(
-                Resources.ofClassPath(javaClass.classLoader, "/ktorm-ksp-compiler/.editorconfig", Charsets.UTF_8)
-            )
-        )
+    private val ruleEngine = KtLintRuleEngine(
+        ruleProviders = StandardRuleSetProvider().getRuleProviders(),
     )
+
+    /**
+     * 格式化代码
+     */
+    private fun formatCode(code: String): String {
+        try {
+            return ruleEngine.format(
+                code = Code.fromSnippet(code),
+                rerunAfterAutocorrect = true,
+                defaultAutocorrect = true,
+                callback = { AutocorrectDecision.ALLOW_AUTOCORRECT }
+            )
+        } catch (e: Exception) {
+            println(code)
+            throw e
+        }
+    }
 
     override fun format(fileName: String, code: String): String {
         try {
@@ -50,7 +56,7 @@ internal class KtLintCodeFormatter(val environment: SymbolProcessorEnvironment) 
                 .replace(Regex("""\s+=\s+"""), " = ")
                 .replace("import org.ktorm.ksp.`annotation`", "import org.ktorm.ksp.annotation")
 
-            return ktLintRuleEngine.format(Code.fromSnippet(snippet))
+            return formatCode(snippet)
         } catch (e: Throwable) {
             environment.logger.exception(e)
             return code
