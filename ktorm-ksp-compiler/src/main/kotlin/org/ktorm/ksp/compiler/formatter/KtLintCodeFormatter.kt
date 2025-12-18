@@ -17,31 +17,17 @@
 package org.ktorm.ksp.compiler.formatter
 
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
-import com.pinterest.ktlint.rule.engine.api.Code
-import com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
-import com.pinterest.ktlint.rule.engine.core.api.AutocorrectDecision
-import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 
 internal class KtLintCodeFormatter(val environment: SymbolProcessorEnvironment) : CodeFormatter {
-    private val ruleEngine = KtLintRuleEngine(
-        ruleProviders = StandardRuleSetProvider().getRuleProviders(),
-    )
+//    private val ruleEngine = KtLintRuleEngine(
+//        ruleProviders = StandardRuleSetProvider().getRuleProviders(),
+//    )
 
     /**
      * 格式化代码
      */
     private fun formatCode(code: String): String {
-        try {
-            return ruleEngine.format(
-                code = Code.fromSnippet(code),
-                rerunAfterAutocorrect = true,
-                defaultAutocorrect = true,
-                callback = { AutocorrectDecision.ALLOW_AUTOCORRECT }
-            )
-        } catch (e: Exception) {
-            println(code)
-            throw e
-        }
+        return code
     }
 
     override fun format(fileName: String, code: String): String {

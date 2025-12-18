@@ -12,12 +12,12 @@ dependencies {
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.23-1.0.20")
     implementation("com.squareup:kotlinpoet-ksp:1.11.0")
     implementation("org.atteo:evo-inflector:1.3")
-    implementation("com.pinterest.ktlint:ktlint-rule-engine:1.3.0") {
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler-embeddable")
-    }
-    implementation("com.pinterest.ktlint:ktlint-ruleset-standard:1.3.0") {
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler-embeddable")
-    }
+//    implementation("com.pinterest.ktlint:ktlint-rule-engine:1.3.0") {
+//        exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler-embeddable")
+//    }
+//    implementation("com.pinterest.ktlint:ktlint-ruleset-standard:1.3.0") {
+//        exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler-embeddable")
+//    }
 
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
