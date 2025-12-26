@@ -8,10 +8,6 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api(kotlin("stdlib"))
     api(kotlin("reflect"))

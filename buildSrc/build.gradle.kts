@@ -3,11 +3,6 @@ plugins {
     `kotlin-dsl`
 }
 
-repositories {
-    mavenCentral()
-    gradlePluginPortal()
-}
-
 dependencies {
     api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
     api("org.jetbrains.dokka:dokka-gradle-plugin:1.9.20")
