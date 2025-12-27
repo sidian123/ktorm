@@ -78,6 +78,7 @@ Ktorm 是一个基于纯 JDBC 的轻量级、高效的 Kotlin ORM 框架。它�
 - `./gradlew build`: 构建项目
 - `./gradlew test`: 运行测试
 - `./gradlew publishToMavenLocal`: 将项目发布到本地 Maven 仓库
+- `./gradlew publishAggregationToCentralPortal`: 将项目发布到中央 Maven 仓库
 
 ## 开发约定
 

@@ -1,4 +1,3 @@
-
 plugins {
     id("kotlin")
     id("signing")
@@ -44,6 +43,7 @@ publishing {
                     connection.set("scm:git:https://github.com/kotlin-orm/ktorm.git")
                     developerConnection.set("scm:git:ssh://git@github.com/kotlin-orm/ktorm.git")
                 }
+
                 developers {
                     developer {
                         id.set("vincentlauvlwj")
@@ -167,37 +167,12 @@ publishing {
                 }
             }
         }
-
-        repositories {
-            maven {
-                name = "central"
-                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-                credentials {
-                    username = System.getenv("OSSRH_USER")
-                    password = System.getenv("OSSRH_PASSWORD")
-                }
-            }
-            maven {
-                name = "snapshot"
-                url = uri("https://oss.sonatype.org/content/repositories/snapshots")
-                credentials {
-                    username = System.getenv("OSSRH_USER")
-                    password = System.getenv("OSSRH_PASSWORD")
-                }
-            }
-        }
     }
 }
 
 signing {
-    val keyId = System.getenv("GPG_KEY_ID")
-    val secretKey = System.getenv("GPG_SECRET_KEY")
-    val password = System.getenv("GPG_PASSWORD")
-
     setRequired {
         !project.version.toString().endsWith("SNAPSHOT")
     }
-
-    useInMemoryPgpKeys(keyId, secretKey, password)
     sign(publishing.publications["dist"])
 }
