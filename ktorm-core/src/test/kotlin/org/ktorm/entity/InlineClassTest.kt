@@ -7,7 +7,10 @@ import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
-import org.ktorm.schema.*
+import org.ktorm.schema.BaseTable
+import org.ktorm.schema.Column
+import org.ktorm.schema.SqlType
+import org.ktorm.schema.Table
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
@@ -16,7 +19,7 @@ import kotlin.test.assertEquals
 class InlineClassTest : BaseTest() {
 
     fun BaseTable<*>.ulong(name: String): Column<ULong> {
-        return registerColumn(name, object : SqlType<ULong>(Types.BIGINT, "bigint unsigned") {
+        return registerColumn(name, object : SqlType<ULong>(Types.BIGINT, "bigint") {
             override fun doSetParameter(ps: PreparedStatement, index: Int, parameter: ULong) {
                 ps.setLong(index, parameter.toLong())
             }
@@ -44,7 +47,7 @@ class InlineClassTest : BaseTest() {
 
         database.useConnection { conn ->
             conn.createStatement().use { statement ->
-                val sql = """CREATE TABLE T_TEST_UNSIGNED(ID BIGINT UNSIGNED NOT NULL PRIMARY KEY)"""
+                val sql = """CREATE TABLE T_TEST_UNSIGNED(ID BIGINT NOT NULL PRIMARY KEY)"""
                 statement.executeUpdate(sql)
             }
         }
@@ -84,7 +87,7 @@ class InlineClassTest : BaseTest() {
 
         database.useConnection { conn ->
             conn.createStatement().use { statement ->
-                val sql = """CREATE TABLE T_TEST_UNSIGNED_NULLABLE(ID BIGINT UNSIGNED NOT NULL PRIMARY KEY)"""
+                val sql = """CREATE TABLE T_TEST_UNSIGNED_NULLABLE(ID BIGINT NOT NULL PRIMARY KEY)"""
                 statement.executeUpdate(sql)
             }
         }

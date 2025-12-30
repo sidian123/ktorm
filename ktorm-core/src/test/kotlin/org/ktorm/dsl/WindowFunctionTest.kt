@@ -321,7 +321,7 @@ class WindowFunctionTest : BaseTest() {
                 String.format("%s:%.2f", row.getString(1), row.getDouble(2))
             }
 
-        assertEquals(setOf("vince:113.00", "marry:113.00", "tom:113.00", "penny:113.00"), results.toSet())
+        assertEquals(setOf("vince:112.50", "marry:112.50", "tom:112.50", "penny:112.50"), results.toSet())
     }
 
     @Test
@@ -333,7 +333,7 @@ class WindowFunctionTest : BaseTest() {
                 String.format("%s:%.2f", row.getString(1), row.getDouble(2))
             }
 
-        assertEquals(setOf("vince:100.00", "marry:75.00", "tom:117.00", "penny:113.00"), results.toSet())
+        assertEquals(setOf("vince:100.00", "marry:75.00", "tom:116.67", "penny:112.50"), results.toSet())
     }
 
     @Test

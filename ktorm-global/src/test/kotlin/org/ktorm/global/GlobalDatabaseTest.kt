@@ -36,7 +36,7 @@ class GlobalDatabaseTest : BaseGlobalTest() {
 
         useConnection { conn ->
             conn.createStatement().use { statement ->
-                val sql = """CREATE TABLE T_CONFIG(KEY VARCHAR(128) PRIMARY KEY, VALUE VARCHAR(128))"""
+                val sql = """CREATE TABLE T_CONFIG("KEY" VARCHAR(128) PRIMARY KEY, "VALUE" VARCHAR(128))"""
                 statement.executeUpdate(sql)
             }
         }

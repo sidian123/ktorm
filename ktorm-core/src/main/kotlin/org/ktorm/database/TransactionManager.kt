@@ -97,6 +97,9 @@ public enum class TransactionIsolation(public val level: Int) {
     REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
     SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
+    /**
+     * Companion object for TransactionIsolation.
+     */
     public companion object {
 
         /**

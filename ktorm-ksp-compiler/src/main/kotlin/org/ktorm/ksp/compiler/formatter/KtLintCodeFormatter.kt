@@ -24,7 +24,7 @@ internal class KtLintCodeFormatter(val environment: SymbolProcessorEnvironment) 
 //    )
 
     /**
-     * 格式化代码
+     * 格式化代码.
      */
     private fun formatCode(code: String): String {
         return code

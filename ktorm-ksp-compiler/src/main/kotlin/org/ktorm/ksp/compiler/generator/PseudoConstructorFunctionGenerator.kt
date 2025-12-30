@@ -18,16 +18,15 @@ package org.ktorm.ksp.compiler.generator
 
 import com.google.devtools.ksp.isAbstract
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import org.ktorm.entity.Entity
 import org.ktorm.ksp.annotation.Undefined
-import org.ktorm.ksp.compiler.util.*
+import org.ktorm.ksp.compiler.util._type
+import org.ktorm.ksp.compiler.util.isInline
 import org.ktorm.ksp.spi.TableMetadata
 import kotlin.reflect.full.memberProperties
 
-@OptIn(KotlinPoetKspPreview::class)
 internal object PseudoConstructorFunctionGenerator {
 
     fun generate(table: TableMetadata): FunSpec {

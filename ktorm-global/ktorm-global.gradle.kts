@@ -8,8 +8,8 @@ plugins {
 
 dependencies {
     api(project(":ktorm-core"))
-    compileOnly("org.springframework:spring-jdbc:5.0.10.RELEASE")
-    compileOnly("org.springframework:spring-tx:5.0.10.RELEASE")
+    compileOnly("org.springframework:spring-jdbc:6.2.1")
+    compileOnly("org.springframework:spring-tx:6.2.1")
     testImplementation(project(":ktorm-core", configuration = "testOutput"))
-    testImplementation("com.h2database:h2:1.4.198")
+    testImplementation("com.h2database:h2:2.3.232")
 }

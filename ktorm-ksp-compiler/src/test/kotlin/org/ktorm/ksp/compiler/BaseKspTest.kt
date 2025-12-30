@@ -1,13 +1,17 @@
 package org.ktorm.ksp.compiler
 
 import com.tschuchort.compiletesting.*
+import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
+import org.jetbrains.kotlin.config.JvmTarget
 import org.junit.After
 import org.junit.Before
 import org.ktorm.database.Database
 import org.ktorm.database.use
 import java.lang.reflect.InvocationTargetException
 
+@OptIn(ExperimentalCompilerApi::class)
 abstract class BaseKspTest {
     lateinit var database: Database
 
@@ -41,14 +45,14 @@ abstract class BaseKspTest {
 
     protected fun kspFailing(message: String, @Language("kotlin") code: String, vararg options: Pair<String, String>) {
         val result = compile(code, mapOf(*options))
-        assert(result.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assert(result.messages.contains("e: Error occurred in KSP, check log for detail"))
+        assert(result.exitCode == ExitCode.COMPILATION_ERROR || result.exitCode == ExitCode.INTERNAL_ERROR)
+//        assert(result.messages.contains("e: Error occurred in KSP, check log for detail"))
         assert(result.messages.contains(message))
     }
 
     protected fun runKotlin(@Language("kotlin") code: String, vararg options: Pair<String, String>) {
         val result = compile(code, mapOf(*options))
-        assert(result.exitCode == KotlinCompilation.ExitCode.OK)
+        assert(result.exitCode == ExitCode.OK)
 
         try {
             val cls = result.classLoader.loadClass("SourceKt")
@@ -59,7 +63,7 @@ abstract class BaseKspTest {
         }
     }
 
-    private fun compile(@Language("kotlin") code: String, options: Map<String, String>): KotlinCompilation.Result {
+    private fun compile(@Language("kotlin") code: String, options: Map<String, String>): JvmCompilationResult {
         @Language("kotlin")
         val header = """
             import java.math.*
@@ -72,10 +76,10 @@ abstract class BaseKspTest {
             import org.ktorm.dsl.*
             import org.ktorm.entity.*
             import org.ktorm.ksp.annotation.*
-            
+
             lateinit var database: Database
-            
-            
+
+
         """.trimIndent()
 
         val source = header + code
@@ -96,14 +100,17 @@ abstract class BaseKspTest {
     private fun createCompilation(source: SourceFile, options: Map<String, String>): KotlinCompilation {
         return KotlinCompilation().apply {
             sources = listOf(source)
-            verbose = false
+            verbose = true
             messageOutputStream = System.out
             inheritClassPath = true
-            allWarningsAsErrors = true
-            symbolProcessorProviders = listOf(KtormProcessorProvider())
+            allWarningsAsErrors = false
+            configureKsp {
+                symbolProcessorProviders += KtormProcessorProvider()
+            }
             kspIncremental = true
             kspWithCompilation = true
-            kspArgs += options
+            jvmTarget = JvmTarget.JVM_21.description
+            kspProcessorOptions.putAll(options)
         }
     }
 

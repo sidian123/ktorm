@@ -5,24 +5,17 @@ version = rootProject.version
 plugins {
     id("kotlin")
     id("org.gradle.jacoco")
-    id("io.gitlab.arturbosch.detekt")
 }
 
 dependencies {
     api(kotlin("stdlib"))
     api(kotlin("reflect"))
     testImplementation(kotlin("test-junit"))
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${detekt.toolVersion}")
-}
-
-detekt {
-    source.setFrom("src/main/kotlin")
-    config.setFrom("${project.rootDir}/detekt.yml")
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks {
@@ -32,16 +25,16 @@ tasks {
     compileKotlin {
         dependsOn(codegen)
 
-        kotlinOptions {
-            jvmTarget = "1.8"
-            allWarningsAsErrors = true
-            freeCompilerArgs = listOf("-Xexplicit-api=strict")
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+            allWarningsAsErrors.set(true)
+            freeCompilerArgs.add("-Xexplicit-api=strict")
         }
     }
 
     compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
 

@@ -16,6 +16,7 @@
 
 package org.ktorm.database
 
+import org.ktorm.database.Database.Companion.connect
 import org.ktorm.dsl.Query
 import org.ktorm.entity.EntitySequence
 import org.ktorm.expression.*
@@ -664,7 +665,7 @@ public class Database(
                 transactionManager = SpringManagedTransactionManager(dataSource),
                 dialect = dialect,
                 logger = logger,
-                exceptionTranslator = { ex -> translator.translate("Ktorm", null, ex) },
+                exceptionTranslator = { ex -> translator.translate("Ktorm", null, ex) ?: ex },
                 alwaysQuoteIdentifiers = alwaysQuoteIdentifiers,
                 generateSqlInUpperCase = generateSqlInUpperCase
             )

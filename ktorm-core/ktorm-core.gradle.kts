@@ -8,10 +8,10 @@ plugins {
 }
 
 dependencies {
-    compileOnly("org.springframework:spring-jdbc:5.0.10.RELEASE")
-    compileOnly("org.springframework:spring-tx:5.0.10.RELEASE")
-    testImplementation("com.h2database:h2:1.4.198")
-    testImplementation("org.slf4j:slf4j-simple:2.0.3")
+    compileOnly("org.springframework:spring-jdbc:6.2.1")
+    compileOnly("org.springframework:spring-tx:6.2.1")
+    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("org.slf4j:slf4j-simple:2.0.16")
 }
 
 val testOutput by configurations.creating {

@@ -190,7 +190,7 @@ public fun Database.Companion.connectWithSpringSupportGlobally(
         transactionManager = SpringManagedTransactionManager(dataSource),
         dialect = dialect,
         logger = logger,
-        exceptionTranslator = { ex -> translator.translate("Ktorm", null, ex) },
+        exceptionTranslator = { ex -> translator.translate("Ktorm", null, ex) ?: ex },
         alwaysQuoteIdentifiers = alwaysQuoteIdentifiers,
         generateSqlInUpperCase = generateSqlInUpperCase
     )

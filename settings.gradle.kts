@@ -37,7 +37,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.14.1"
+    id("com.gradle.enterprise") version "3.18.2"
 }
 
 include("ktorm-core")
@@ -58,12 +58,8 @@ rootProject.children.forEach { project ->
     project.buildFileName = "${project.name}.gradle.kts"
 }
 
-gradleEnterprise {
-    if (System.getenv("CI") == "true") {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
+develocity {
+    buildScan {
+        publishing.onlyIf { System.getenv("CI") == "true" }
     }
 }
