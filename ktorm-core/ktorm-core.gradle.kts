@@ -20,7 +20,7 @@ val testOutput by configurations.creating {
 
 val testJar by tasks.registering(Jar::class) {
     dependsOn(tasks.testClasses)
-    from(sourceSets.test.map { it.output })
+    from(sourceSets.test.get().output)
     archiveClassifier.set("test")
 }
 
