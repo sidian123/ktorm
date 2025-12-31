@@ -19,8 +19,10 @@ package org.ktorm.ksp.compiler.parser
 import com.google.devtools.ksp.*
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
-import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.symbol.ClassKind.*
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.KSType
 import org.ktorm.entity.Entity
 import org.ktorm.ksp.annotation.*
 import org.ktorm.ksp.compiler.util.*
@@ -28,11 +30,8 @@ import org.ktorm.ksp.spi.CodingNamingStrategy
 import org.ktorm.ksp.spi.ColumnMetadata
 import org.ktorm.ksp.spi.DatabaseNamingStrategy
 import org.ktorm.ksp.spi.TableMetadata
-import org.ktorm.schema.TypeReference
 import java.lang.reflect.InvocationTargetException
 import java.util.*
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.jvmName
 
 @OptIn(KspExperimental::class)
 internal class MetadataParser(resolver: Resolver, environment: SymbolProcessorEnvironment) {
@@ -120,7 +119,7 @@ internal class MetadataParser(resolver: Resolver, environment: SymbolProcessorEn
     }
 
     private fun KSClassDeclaration.getProperties(ignoreProperties: Set<String>): Sequence<KSPropertyDeclaration> {
-        val skipNames = Entity::class.memberProperties.map { it.name }.toSet()
+        val skipNames = Reflections.ENTITY_MEMBERS
 
         val constructorParams = HashSet<String>()
         if (classKind == CLASS) {
@@ -166,13 +165,13 @@ internal class MetadataParser(resolver: Resolver, environment: SymbolProcessorEn
     private fun parseColumnSqlType(property: KSPropertyDeclaration): KSType {
         val propName = property.qualifiedName?.asString()
         var sqlType = property.annotations
-            .filter { it._annotationType.declaration.qualifiedName?.asString() == Column::class.jvmName }
+            .filter { it._annotationType.declaration.qualifiedName?.asString() == Reflections.COLUMN_ANNOTATION }
             .flatMap { it.arguments }
             .filter { it.name?.asString() == Column::sqlType.name }
             .map { it.value as KSType? }
             .singleOrNull()
 
-        if (sqlType?.declaration?.qualifiedName?.asString() == Nothing::class.jvmName) {
+        if (sqlType?.declaration?.qualifiedName?.asString() == Reflections.NOTHING_CLASS) {
             sqlType = null
         }
 
@@ -194,7 +193,7 @@ internal class MetadataParser(resolver: Resolver, environment: SymbolProcessorEn
 
             val hasConstructor = declaration.getConstructors()
                 .filter { it.parameters.size == 1 }
-                .filter { it.parameters[0]._type.declaration.qualifiedName?.asString() == TypeReference::class.jvmName }
+                .filter { it.parameters[0]._type.declaration.qualifiedName?.asString() == Reflections.TYPE_REFERENCE_CLASS }
                 .any()
 
             if (!hasConstructor) {

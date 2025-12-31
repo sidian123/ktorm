@@ -20,15 +20,14 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
-import org.ktorm.ksp.annotation.Table
 import org.ktorm.ksp.compiler.formatter.CodeFormatter
 import org.ktorm.ksp.compiler.formatter.KtLintCodeFormatter
 import org.ktorm.ksp.compiler.formatter.StandaloneKtLintCodeFormatter
 import org.ktorm.ksp.compiler.generator.FileGenerator
 import org.ktorm.ksp.compiler.parser.MetadataParser
+import org.ktorm.ksp.compiler.util.Reflections
 import org.ktorm.ksp.compiler.util.isValid
 import org.ktorm.ksp.spi.TableMetadata
-import kotlin.reflect.jvm.jvmName
 
 /**
  * Ktorm KSP symbol processor provider.
@@ -48,7 +47,8 @@ public class KtormProcessorProvider : SymbolProcessorProvider {
     }
 
     private fun doProcess(resolver: Resolver, environment: SymbolProcessorEnvironment): List<KSAnnotated> {
-        val (symbols, deferral) = resolver.getSymbolsWithAnnotation(Table::class.jvmName).partition { it.isValid() }
+        val (symbols, deferral) = resolver.getSymbolsWithAnnotation(Reflections.TABLE_ANNOTATION)
+            .partition { it.isValid() }
         if (symbols.isNotEmpty()) {
             val parser = MetadataParser(resolver, environment)
             val formatter = getCodeFormatter(environment)

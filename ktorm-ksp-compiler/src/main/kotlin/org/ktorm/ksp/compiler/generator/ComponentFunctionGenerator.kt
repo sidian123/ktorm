@@ -21,15 +21,14 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
-import org.ktorm.entity.Entity
+import org.ktorm.ksp.compiler.util.Reflections
 import org.ktorm.ksp.compiler.util._type
 import org.ktorm.ksp.spi.TableMetadata
-import kotlin.reflect.full.memberProperties
 
 internal object ComponentFunctionGenerator {
 
     fun generate(table: TableMetadata): Sequence<FunSpec> {
-        val skipNames = Entity::class.memberProperties.map { it.name }.toSet()
+        val skipNames = Reflections.ENTITY_MEMBERS
         return table.entityClass.getAllProperties()
             .filter { it.isAbstract() }
             .filter { it.simpleName.asString() !in skipNames }

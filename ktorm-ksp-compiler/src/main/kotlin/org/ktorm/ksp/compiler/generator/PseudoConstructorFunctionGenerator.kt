@@ -22,10 +22,10 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import org.ktorm.entity.Entity
 import org.ktorm.ksp.annotation.Undefined
+import org.ktorm.ksp.compiler.util.Reflections
 import org.ktorm.ksp.compiler.util._type
 import org.ktorm.ksp.compiler.util.isInline
 import org.ktorm.ksp.spi.TableMetadata
-import kotlin.reflect.full.memberProperties
 
 internal object PseudoConstructorFunctionGenerator {
 
@@ -43,7 +43,8 @@ internal object PseudoConstructorFunctionGenerator {
     }
 
     internal fun buildParameters(table: TableMetadata): Sequence<ParameterSpec> {
-        val skipNames = Entity::class.memberProperties.map { it.name }.toSet()
+        // 使用硬编码的成员名集合代替 Entity::class.memberProperties，避免 Kotlin 反射 API 在 KSP 处理器中的类加载器冲突问题
+        val skipNames = Reflections.ENTITY_MEMBERS
         return table.entityClass.getAllProperties()
             .filter { it.isAbstract() }
             .filter { it.simpleName.asString() !in skipNames }
@@ -64,7 +65,7 @@ internal object PseudoConstructorFunctionGenerator {
             addStatement("val·entity·=·%T.create<%T>()", Entity::class.asClassName(), table.entityClass.toClassName())
         }
 
-        val skipNames = Entity::class.memberProperties.map { it.name }.toSet()
+        val skipNames = Reflections.ENTITY_MEMBERS
         for (prop in table.entityClass.getAllProperties()) {
             if (!prop.isAbstract() || prop.simpleName.asString() in skipNames) {
                 continue
